@@ -5,3 +5,6 @@ singleuser:
     pullPolicy: IfNotPresent
   storage:
     type: none
+prePuller:
+  hook:
+    enabled: false
