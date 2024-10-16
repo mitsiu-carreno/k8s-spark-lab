@@ -4,7 +4,8 @@ helm upgrade \
 --install spark-cluster bitnami/spark \
 --namespace spark-cluster \
 --create-namespace \
---cleanup-on-fail
+--cleanup-on-fail \
+--values values.yml
 
 
 
@@ -41,6 +42,7 @@ helm upgrade \
 --namespace spark-cluster \
 --create-namespace \
 --cleanup-on-fail \
+--values values.yml \
 --set worker.replicaCount=5
 
 helm uninstall -n spark-cluster spark-cluster

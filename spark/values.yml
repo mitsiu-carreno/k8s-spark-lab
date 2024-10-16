@@ -1,0 +1,8 @@
+master:
+  configOptions:
+    -Dspark.ui.reverseProxy=true
+    -Dspark.ui.reverseProxyUrl=http://localhost:8080
+worker:
+  configOptions:
+    -Dspark.ui.reverseProxy=true
+    -Dspark.ui.reverseProxyUrl=http://localhost:8081

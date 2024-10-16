@@ -7,7 +7,7 @@ helm upgrade \
 --namespace jupyterhub \
 --create-namespace \
 --cleanup-on-fail \
---set singleuser.storage.type=none 
+--set prePuller.hook.enabled=false 
 
 helm upgrade \
 --install jupyterhub jupyterhub/jupyterhub \
