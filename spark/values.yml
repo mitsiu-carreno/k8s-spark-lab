@@ -3,6 +3,8 @@ master:
     -Dspark.ui.reverseProxy=true
     -Dspark.ui.reverseProxyUrl=http://localhost:8080
 worker:
+  coreLimit: 2
+  memoryLimit: 3g
   configOptions:
     -Dspark.ui.reverseProxy=true
     -Dspark.ui.reverseProxyUrl=http://localhost:8081

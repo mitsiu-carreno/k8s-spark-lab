@@ -18,6 +18,9 @@ helm upgrade \
 
 kubectl --namespace=jupyterhub port-forward service/proxy-public 9080:http
 
+# If jupyter is driver
+kubectl --namespace=jupyterhub port-forward jupyter-mit 4040:4040
+
 helm uninstall -n jupyterhub jupyterhub
 
 helm repo remove jupyterhub
