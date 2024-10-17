@@ -36,6 +36,9 @@ kubectl -n spark-cluster exec -it spark-cluster-master-0 -- ./bin/spark-submit \
 --conf spark.hadoop.fs.s3a.path.style.access=true \
 /tmp/submit-job.py
 
+# Ref 
+spark-submit --num-executors 40 --executor-cores 4 --executor-memory 2G
+
 
 helm upgrade \
 --install spark-cluster bitnami/spark \
