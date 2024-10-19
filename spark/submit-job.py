@@ -13,6 +13,6 @@ if __name__ == "__main__":
     for (word, count) in final:
         print("%s: %i" % (word, count))
     
-    sorted.map(lambda x: f"{x[0], x[1]}").saveAsTextFile("s3a://demo/output/wordcount_submit")
+    sorted.coalesce(1).saveAsTextFile("s3a://demo/output/wordcount_submit")
     #word_counts.toDF().coalesce(1).write.text("s3a://demo/output/wordcount_submit")
     sc.stop()
