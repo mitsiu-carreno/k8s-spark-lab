@@ -10,7 +10,7 @@ Once the helm repo is added we can install the chart **jupyterhub** defined in t
 ```
 helm upgrade \
 --install jupyterhub jupyterhub/jupyterhub \
---version 3.3.8 \ 
+--version 3.3.8 \
 --namespace jupyterhub \
 --create-namespace \
 --cleanup-on-fail \
@@ -31,7 +31,7 @@ We can forward the service proxy-public which is available on port 80 in the kub
 kubectl --namespace=jupyterhub port-forward service/proxy-public 9080:http
 ```
 
-# If jupyter is driver
+# If jupyter is spark driver
 As we are running jupyterhub to provide a driver for our spark-cluster it's worth mentioning that once an app is running spark enables port 4040 to access spark web ui, if our notebook proxy spark host to our notebook host, we can access forwarding in a similar command but replacing `jupyter-mit` with the pod that's running the notebook
 ```
 kubectl --namespace=jupyterhub port-forward jupyter-mit 4040:4040

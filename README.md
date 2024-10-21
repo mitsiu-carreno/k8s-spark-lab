@@ -50,4 +50,5 @@ version.BuildInfo{Version:"3.15.4", GitCommit:"fa9efb07d9d8debbb4306d72af76a3838
 # Project structure
 There's a dedicated folder for each chart (plus a quick guide into setting up a **local registry**) in each chart folder you will find a README.md laying out all the available commands for setting up, a `values.yml` file when specific tweaking is required/recommended and in some cases other complementary files like test-scripts, all files purpouses and usage are explained in the corresponding README.md.
 
-There's also a `how-to-cluster.md` file in which it's explained the recommended way of using all helm charts to create a spark-cluster using both minio as distributed object storage and jupyterhub with Pyspark as application driver.
+# I need more handholding
+No shame we've all been through total confussion and uncertainty, take a look into `how-to-cluster.md` and lets build this together :)
