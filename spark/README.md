@@ -21,7 +21,7 @@ We can monitor the spark cluster creation with
 watch -d kubectl -n spark-cluster get all
 ```
 
-Also we can forward service <namespace>-master-svc which by default is available on port 80 in the kubernetes cluster to port 8080 in the host
+Also we can forward service `<namespace>-master-svc` which by default is available on port 80 in the kubernetes cluster to port 8080 in the host
 ```
 kubectl port-forward --namespace spark-cluster svc/spark-cluster-master-svc 8080:80
 ```
@@ -96,6 +96,6 @@ kubectl delete namespace spark-cluster
 
 # Usefull references
 Your best friend is the official documentation, but also you might find helpful:
-https://spark.apache.org/docs/latest/running-on-kubernetes.html
-https://github.com/bitnami/charts/tree/main/bitnami/spark
+- https://spark.apache.org/docs/latest/running-on-kubernetes.html
+- https://github.com/bitnami/charts/tree/main/bitnami/spark
 
