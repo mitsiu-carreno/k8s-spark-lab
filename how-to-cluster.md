@@ -18,7 +18,7 @@ Follow the commands described at the [spark helm installation](https://github.co
 You can follow the installation progress with the first command in [kubernetes monitoring section](https://github.com/mitsiu-carreno/k8s-spark-lab/tree/main/spark#kubernetes-monitoring)        
 
 Once the installation is completed you shoud see a state similar to the following, notice the column STATUS=Running:
-> NAME&nbsp;                        READY   STATUS    RESTARTS   AGE          
+> NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY   STATUS    RESTARTS   AGE          
 > pod/spark-cluster-master-0   1/1     Running   0          4m         
 > pod/spark-cluster-worker-0   1/1     Running   0          4m         
 > pod/spark-cluster-worker-1   1/1     Running   0          48s        
