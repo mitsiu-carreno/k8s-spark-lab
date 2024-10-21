@@ -1,5 +1,6 @@
 singleuser:
   image:
+    # We provide our own image that installs java, and an specific version of python (see local_registry folder)
     name: localhost:5000/mit-jupy-pyspark
     tag: 1.0.0
     pullPolicy: IfNotPresent

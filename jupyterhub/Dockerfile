@@ -1,3 +1,4 @@
+# Credit: https://jupyter-docker-stacks.readthedocs.io/en/latest/using/recipes.html#add-a-custom-conda-environment-and-jupyter-kernel
 FROM quay.io/jupyter/minimal-notebook
 
 # Name your environment and choose the Python version
@@ -48,7 +49,7 @@ RUN \
     # This makes the custom environment default in Jupyter Terminals for already existing NB_USER
     echo conda activate "${env_name}" >> "/home/${NB_USER}/.bashrc"
 
-
+# Install java which is required by spark
 RUN apt-get update && \
   apt-get install -y openjdk-11-jdk-headless curl && \
   apt-get clean
