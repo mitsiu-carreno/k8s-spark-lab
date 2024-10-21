@@ -1,10 +1,16 @@
+# Master node configuration
 master:
   configOptions:
+    # Make spark UI accessible from http://localhost:8080 (or whatever domain you can access the kubernetes cluster)
     -Dspark.ui.reverseProxy=true
     -Dspark.ui.reverseProxyUrl=http://localhost:8080
+# Worker nodes configuration
 worker:
+  # Each worker should have two CPU's, allowing two task parallely per worker
   coreLimit: 2
+  # Each worker should have 3 Gb RAM
   memoryLimit: 3g
   configOptions:
+    # Make worker spark UI accessible from http://localhost:8081 (or whatever domain you can access the kubernetes cluster)
     -Dspark.ui.reverseProxy=true
     -Dspark.ui.reverseProxyUrl=http://localhost:8081

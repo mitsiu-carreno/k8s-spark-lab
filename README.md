@@ -24,18 +24,30 @@ version.BuildInfo{Version:"3.15.4", GitCommit:"fa9efb07d9d8debbb4306d72af76a3838
 
 # Charts
 ## Spark
+| Property | Value |
+|---------------|--------|
 | URL | https://charts.bitnami.com/bitnami |
-|---------------|--------|
-| Chart | spark |
-|---------------|--------|
+| Chart | /spark |
 | Chart version | 9.2.12 |
-|---------------|--------|
 | App version   | 3.5.3  |
 
 ## Minio
-Chart version: minio-5.3.0
-App version: RELEASE.2024-04-18T19-09-19Z
+| Property | Value |
+|---------------|--------|
+| URL | https://charts.min.io/ |
+| Chart | /minio |
+| Chart version | 5.3.0 |
+| App version   | RELEASE.2024-04-18T19-09-19Z  |
 
-## Jupyterhub
-Chart version: jupyterhub-3.3.8
-App version: 4.1.6 
+## Jupyterhub      
+| Property | Value |
+|---------------|--------|
+| URL | https://hub.jupyter.org/helm-chart/ |
+| Chart | /jupyterhub |
+| Chart version | 3.3.8 |
+| App version   | 4.1.6  |
+
+# Project structure
+There's a dedicated folder for each chart (plus a quick guide into setting up a **local registry**) in each chart folder you will find a README.md laying out all the available commands for setting up, a `values.yml` file when specific tweaking is required/recommended and in some cases other complementary files like test-scripts, all files purpouses and usage are explained in the corresponding README.md.
+
+There's also a `how-to-cluster.md` file in which it's explained the recommended way of using all helm charts to create a spark-cluster using both minio as distributed object storage and jupyterhub with Pyspark as application driver.
