@@ -4,7 +4,7 @@ We must add the helm repo in this case I selected the name **minio**
 helm repo add minio https://charts.min.io/
 ```
 
-Once the helm repo is added we can install the chart **minio** in the bitnami repo in the `minio` namespace, additionally we setup some minor tweaks, notice that **credentials are hardcoded, this should be avoided in a productive environment**.
+Once the helm repo is added we can install the chart **minio** defined in the bitnami repo in the `minio` namespace, additionally we setup some minor tweaks, notice that **credentials are hardcoded, this should be avoided in a productive environment**.
 ```  
 helm upgrade \
 --install minio minio/minio \

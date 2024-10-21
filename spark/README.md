@@ -4,7 +4,7 @@ We must add the helm repo in this case I selected the name **bitnami**
 helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 
-Once the helm repo is added we can install the chart **spark** in the bitnami repo in the `spark-cluster` namespace, additionally we setup some minor tweaks defined in `values.yml`.
+Once the helm repo is added we can install the chart **spark** defined in the bitnami repo in the `spark-cluster` namespace, additionally we setup some minor tweaks defined in `values.yml`.
 ```
 helm upgrade \
 --install spark-cluster bitnami/spark \
