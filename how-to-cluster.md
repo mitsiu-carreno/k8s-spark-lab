@@ -52,35 +52,35 @@ kubectl -n spark-cluster logs -f spark-cluster-worker-0
 ```
 
 Usually at this stage master logs will end with:       
-> ...
-> 24/10/21 07:37:16 INFO Master: I have been elected leader! New state: ALIVE
-> 24/10/21 07:37:39 INFO Master: Registering worker 10.244.0.3:33145 with 2 cores, 3.0 GiB RAM
-> 24/10/21 07:37:47 INFO Master: Registering worker 10.244.0.5:41495 with 2 cores, 3.0 GiB RAM
+> ...         
+> 24/10/21 07:37:16 INFO Master: I have been elected leader! New state: ALIVE         
+> 24/10/21 07:37:39 INFO Master: Registering worker 10.244.0.3:33145 with 2 cores, 3.0 GiB RAM          
+> 24/10/21 07:37:47 INFO Master: Registering worker 10.244.0.5:41495 with 2 cores, 3.0 GiB RAM          
 
 We see a log for each worker registered         
 
 Worker logs at this stage will end with:
-> ...
-> Caused by: io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: spark-cluster-master-svc/10.102.130.157:7077
-> Caused by: java.net.ConnectException: Connection refused
-> 	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
-> 	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
-> 	at java.base/sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:946)
-> 	at io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:337)
-> 	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:334)
-> 	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:776)
-> 	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
-> 	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
-> 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
-> 	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
-> 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-> 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
-> 	at java.base/java.lang.Thread.run(Thread.java:840)
-> 24/10/21 07:37:39 INFO Worker: Retrying connection to master (attempt # 2)
-> 24/10/21 07:37:39 INFO Worker: Connecting to master spark-cluster-master-svc:7077...
-> 24/10/21 07:37:39 INFO TransportClientFactory: Successfully created connection to spark-cluster-master-svc/10.102.130.157:7077 after 2 ms (0 ms spent in bootstraps)
-> 24/10/21 07:37:39 INFO Worker: Successfully registered with master spark://spark-cluster-master-0.spark-cluster-headless.spark-cluster.svc.cluster.local:7077
-> 24/10/21 07:37:39 INFO Worker: WorkerWebUI is available at http://localhost:8080/proxy/worker-20241021073715-10.244.0.3-33145
+> ...                       
+> Caused by: io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: spark-cluster-master-svc/10.102.130.157:7077               
+> Caused by: java.net.ConnectException: Connection refused          
+>&nbsp;&nbsp;at java.base/sun.nio.ch.Net.pollConnect(Native Method)            
+>&nbsp;&nbsp;at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)            
+>&nbsp;&nbsp;at java.base/sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:946)              
+>&nbsp;&nbsp;at io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:337)           
+>&nbsp;&nbsp;at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:334)                
+>&nbsp;&nbsp;at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:776)                
+>&nbsp;&nbsp;at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)                  
+>&nbsp;&nbsp;at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)                  
+>&nbsp;&nbsp;at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)                   
+>&nbsp;&nbsp;at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)                
+>&nbsp;&nbsp;at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)                
+>&nbsp;&nbsp;at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)                
+>&nbsp;&nbsp;at java.base/java.lang.Thread.run(Thread.java:840)           
+> 24/10/21 07:37:39 INFO Worker: Retrying connection to master (attempt # 2)          
+> 24/10/21 07:37:39 INFO Worker: Connecting to master spark-cluster-master-svc:7077...         
+> 24/10/21 07:37:39 INFO TransportClientFactory: Successfully created connection to spark-cluster-master-svc/10.102.130.157:7077 after 2 ms (0 ms spent in bootstraps)                 
+> 24/10/21 07:37:39 INFO Worker: Successfully registered with master spark://spark-cluster-master-0.spark-cluster-headless.spark-cluster.svc.cluster.local:7077              
+> 24/10/21 07:37:39 INFO Worker: WorkerWebUI is available at http://localhost:8080/proxy/worker-20241021073715-10.244.0.3-33145                   
 
 As we can see, the worker tried to connect with master but failed, then at 07:37:39 it retry again and succeed, this is because worker usually is ready before both master and spark-cluster-master-svc service.       
 
@@ -142,33 +142,33 @@ Similiar to spark and minio we will start by [installing helm chart](https://git
 
 A successfull deployment should look like this:
 
-> NAME                                 READY   STATUS    RESTARTS   AGE
-> pod/continuous-image-puller-crsrz    1/1     Running   0          2m19s
-> pod/hub-7d457d76b9-lvdnj             1/1     Running   0          2m19s
-> pod/proxy-6d5df59564-jsdvs           1/1     Running   0          2m19s
-> pod/user-scheduler-f4f4f6f8b-7t2fh   1/1     Running   0          2m19s
-> pod/user-scheduler-f4f4f6f8b-zbz8g   1/1     Running   0          2m19s
-> 
-> NAME                   TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
-> service/hub            ClusterIP      10.104.223.239   <none>        8081/TCP       2m20s
-> service/proxy-api      ClusterIP      10.102.186.223   <none>        8001/TCP       2m20s
-> service/proxy-public   LoadBalancer   10.105.168.15    <pending>     80:30280/TCP   2m20s
-> 
-> NAME                                     DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-> daemonset.apps/continuous-image-puller   1         1         1       1            1           <none>          2m20s
-> 
-> NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
-> deployment.apps/hub              1/1     1            1           2m20s
-> deployment.apps/proxy            1/1     1            1           2m20s
-> deployment.apps/user-scheduler   2/2     2            2           2m20s
-> 
-> NAME                                       DESIRED   CURRENT   READY   AGE
-> replicaset.apps/hub-7d457d76b9             1         1         1       2m19s
-> replicaset.apps/proxy-6d5df59564           1         1         1       2m19s
-> replicaset.apps/user-scheduler-f4f4f6f8b   2         2         2       2m19s
-> 
-> NAME                                READY   AGE
-> statefulset.apps/user-placeholder   0/0     2m19s
+> NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;STATUS&nbsp;&nbsp;&nbsp;&nbsp;RESTARTS&nbsp;&nbsp;&nbsp;AGE             
+> pod/continuous-image-puller-crsrz&nbsp;&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m19s             
+> pod/hub-7d457d76b9-lvdnj&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m19s             
+> pod/proxy-6d5df59564-jsdvs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m19s             
+> pod/user-scheduler-f4f4f6f8b-7t2fh&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m19s             
+> pod/user-scheduler-f4f4f6f8b-zbz8g&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m19s             
+>              
+> NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TYPE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CLUSTER-IP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EXTERNAL-IP&nbsp;&nbsp;&nbsp;PORT(S)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AGE             
+> service/hub&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ClusterIP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10.104.223.239&nbsp;&nbsp;&nbsp;<none>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8081/TCP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m20s             
+> service/proxy-api&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ClusterIP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10.102.186.223&nbsp;&nbsp;&nbsp;<none>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8001/TCP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m20s             
+> service/proxy-public&nbsp;&nbsp;&nbsp;LoadBalancer&nbsp;&nbsp;&nbsp;10.105.168.15&nbsp;&nbsp;&nbsp;&nbsp;<pending>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;80:30280/TCP&nbsp;&nbsp;&nbsp;2m20s             
+>              
+> NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DESIRED&nbsp;&nbsp;&nbsp;CURRENT&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;UP-TO-DATE&nbsp;&nbsp;&nbsp;AVAILABLE&nbsp;&nbsp;&nbsp;NODE&nbsp;SELECTOR&nbsp;&nbsp;&nbsp;AGE             
+> daemonset.apps/continuous-image-puller&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<none>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m20s             
+>              
+> NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;UP-TO-DATE&nbsp;&nbsp;&nbsp;AVAILABLE&nbsp;&nbsp;&nbsp;AGE             
+> deployment.apps/hub&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m20s             
+> deployment.apps/proxy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m20s             
+> deployment.apps/user-scheduler&nbsp;&nbsp;&nbsp;2/2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m20s             
+>              
+> NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DESIRED&nbsp;&nbsp;&nbsp;CURRENT&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;AGE             
+> replicaset.apps/hub-7d457d76b9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m19s             
+> replicaset.apps/proxy-6d5df59564&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m19s             
+> replicaset.apps/user-scheduler-f4f4f6f8b&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m19s             
+>              
+> NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;AGE             
+> statefulset.apps/user-placeholder&nbsp;&nbsp;&nbsp;0/0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2m19s             
 
 A non-successfull deployment probably will fail at this pod
 > NAME                                 READY   STATUS           RESTARTS   AGE
