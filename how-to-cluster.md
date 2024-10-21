@@ -180,19 +180,19 @@ This means that Docker was unable to find our custom-made container image from s
 kubectl -n jupyterhub describe pod/continuous-image-puller-n57rd
 ```
 And on the last section you'll see the problem
-> ...
-> Events:
-> &nbsp;&nbsp;Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reason&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Age&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Message
-> &nbsp;&nbsp;----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;------&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-------
-> &nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;Scheduled&nbsp;&nbsp;46s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default-scheduler&nbsp;&nbsp;Successfully assigned jupyterhub/continuous-image-puller-n57rd to minikube
-> &nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;Pulled&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;45s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Container image "quay.io/jupyterhub/k8s-network-tools:3.3.8" already present on machine
-> &nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;Created&nbsp;&nbsp;&nbsp;&nbsp;45s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Created container image-pull-metadata-block
-> &nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;Started&nbsp;&nbsp;&nbsp;&nbsp;45s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Started container image-pull-metadata-block
-> &nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;BackOff&nbsp;&nbsp;&nbsp;&nbsp;13s (x2 over 42s)&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back-off pulling image "localhost:5000/mit-jupy-pyspark:1.0.0"
-> &nbsp;&nbsp;Warning&nbsp;&nbsp;Failed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;13s (x2 over 42s)&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: ImagePullBackOff
-> &nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;Pulling&nbsp;&nbsp;&nbsp;&nbsp;1s (x3 over 44s)&nbsp;&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pulling image "localhost:5000/mit-jupy-pyspark:1.0.0"
-> &nbsp;&nbsp;Warning&nbsp;&nbsp;Failed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1s (x3 over 44s)&nbsp;&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to pull image "localhost:5000/mit-jupy-pyspark:1.0.0": Error response from daemon: manifest for localhost:5000/mit-jupy-pyspark:1.0.0 not found: manifest unknown: manifest unknown
-> &nbsp;&nbsp;Warning&nbsp;&nbsp;Failed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1s (x3 over 44s)&nbsp;&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: ErrImagePull
+> ...             
+> Events:             
+> &nbsp;&nbsp;Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reason&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Age&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Message             
+> &nbsp;&nbsp;----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;------&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-------             
+> &nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;Scheduled&nbsp;&nbsp;46s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default-scheduler&nbsp;&nbsp;Successfully assigned jupyterhub/continuous-image-puller-n57rd to minikube             
+> &nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;Pulled&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;45s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Container image "quay.io/jupyterhub/k8s-network-tools:3.3.8" already present on machine             
+> &nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;Created&nbsp;&nbsp;&nbsp;&nbsp;45s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Created container image-pull-metadata-block             
+> &nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;Started&nbsp;&nbsp;&nbsp;&nbsp;45s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Started container image-pull-metadata-block             
+> &nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;BackOff&nbsp;&nbsp;&nbsp;&nbsp;13s (x2 over 42s)&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back-off pulling image "localhost:5000/mit-jupy-pyspark:1.0.0"             
+> &nbsp;&nbsp;Warning&nbsp;&nbsp;Failed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;13s (x2 over 42s)&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: ImagePullBackOff             
+> &nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;Pulling&nbsp;&nbsp;&nbsp;&nbsp;1s (x3 over 44s)&nbsp;&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pulling image "localhost:5000/mit-jupy-pyspark:1.0.0"             
+> &nbsp;&nbsp;Warning&nbsp;&nbsp;Failed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1s (x3 over 44s)&nbsp;&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to pull image "localhost:5000/mit-jupy-pyspark:1.0.0": Error response from daemon: manifest for localhost:5000/mit-jupy-pyspark:1.0.0 not found: manifest unknown: manifest unknown             
+> &nbsp;&nbsp;Warning&nbsp;&nbsp;Failed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1s (x3 over 44s)&nbsp;&nbsp;&nbsp;kubelet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: ErrImagePull             
 
 Once you managed to have jupyterhub running with our custom kernel, we can [access jupyter web interface](https://github.com/mitsiu-carreno/k8s-spark-lab/tree/main/jupyterhub#accessing-web-console)
 
@@ -200,13 +200,13 @@ Heading to localhost:9080 we will be prompted with jupyter authentication, in th
 ![jupyter-auth](assets/3-jupyter-auth.png)
 
 Once we sign in, a new pod will be created with the name jupyter-<user> 
-> NAME                                 READY   STATUS    RESTARTS   AGE
-> pod/continuous-image-puller-n57rd    1/1     Running   0          15m
-> pod/hub-6cc5b4dcfb-kkgsx             1/1     Running   0          15m
-> pod/jupyter-mit                      1/1     Running   0          14s
-> pod/proxy-fc5667f5f-7kmms            1/1     Running   0          15m
-> pod/user-scheduler-f4f4f6f8b-7t2fh   1/1     Running   0          55m
-> pod/user-scheduler-f4f4f6f8b-zbz8g   1/1     Running   0          55m 
+> NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;STATUS&nbsp;&nbsp;&nbsp;&nbsp;RESTARTS&nbsp;&nbsp;&nbsp;AGE             
+> pod/continuous-image-puller-n57rd&nbsp;&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15m             
+> pod/hub-6cc5b4dcfb-kkgsx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15m             
+> pod/jupyter-mit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;14s             
+> pod/proxy-fc5667f5f-7kmms&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15m             
+> pod/user-scheduler-f4f4f6f8b-7t2fh&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;55m             
+> pod/user-scheduler-f4f4f6f8b-zbz8g&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;55m              
 
 And on our browser we will see our custom kernel
 ![jupyter-kernel](assets/3-jupyter-kernel.png)
