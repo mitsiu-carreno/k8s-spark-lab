@@ -18,10 +18,10 @@ Follow the commands described at the [spark helm installation](https://github.co
 You can follow the installation progress with the first command in [kubernetes monitoring section](https://github.com/mitsiu-carreno/k8s-spark-lab/tree/main/spark#kubernetes-monitoring)        
 
 Once the installation is completed you shoud see a state similar to the following, notice the column STATUS=Running:
-> NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY   STATUS    RESTARTS   AGE          
-> pod/spark-cluster-master-0   1/1     Running   0          4m         
-> pod/spark-cluster-worker-0   1/1     Running   0          4m         
-> pod/spark-cluster-worker-1   1/1     Running   0          48s        
+> NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;&nbsp;STATUS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RESTARTS&nbsp;&nbsp;&nbsp;&nbsp;AGE          
+> pod/spark-cluster-master-0&nbsp;&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4m         
+> pod/spark-cluster-worker-0&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4m         
+> pod/spark-cluster-worker-1&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Running&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;48s        
 >           
 > NAME                               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)           AGE         
 > service/spark-cluster-headless     ClusterIP   None             <none>        <none>            4m        
