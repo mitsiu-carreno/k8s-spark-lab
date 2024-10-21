@@ -18,18 +18,18 @@ Follow the commands described at the [spark helm installation](https://github.co
 You can follow the installation progress with the first command in [kubernetes monitoring section](https://github.com/mitsiu-carreno/k8s-spark-lab/tree/main/spark#kubernetes-monitoring)        
 
 Once the installation is completed you shoud see a state similar to the following, notice the column STATUS=Running:
-> NAME nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;READY nbsp;nbsp;nbsp;STATUS nbsp;nbsp;nbsp;nbsp;RESTARTS nbsp;nbsp;nbsp;AGE           
-> pod/spark-cluster-master-0 nbsp;nbsp;nbsp;1/1 nbsp;nbsp;nbsp;nbsp;nbsp;Running nbsp;nbsp;nbsp;0 nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;4m           
-> pod/spark-cluster-worker-0 nbsp;nbsp;nbsp;1/1 nbsp;nbsp;nbsp;nbsp;nbsp;Running nbsp;nbsp;nbsp;0 nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;4m           
-> pod/spark-cluster-worker-1 nbsp;nbsp;nbsp;1/1 nbsp;nbsp;nbsp;nbsp;nbsp;Running nbsp;nbsp;nbsp;0 nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;48s           
-> nbsp;          
-> NAME nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;TYPE nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;CLUSTER-IP nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;EXTERNAL-IP nbsp;nbsp;nbsp;PORT(S) nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;AGE           
-> service/spark-cluster-headless nbsp;nbsp;nbsp;nbsp;nbsp;ClusterIP nbsp;nbsp;nbsp;None nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;<none> nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;<none> nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;4m           
-> service/spark-cluster-master-svc nbsp;nbsp;nbsp;ClusterIP nbsp;nbsp;nbsp;10.102.130.157 nbsp;nbsp;nbsp;<none> nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;7077/TCP,80/TCP nbsp;nbsp;nbsp;4m           
->  nbsp;         
-> NAME nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;nbsp;READY nbsp;nbsp;nbsp;AGE           
-> statefulset.apps/spark-cluster-master nbsp;nbsp;nbsp;1/1 nbsp;nbsp;nbsp;nbsp;nbsp;4m           
-> statefulset.apps/spark-cluster-worker nbsp;nbsp;nbsp;2/2 nbsp;nbsp;nbsp;nbsp;nbsp;4m           
+> NAME                         READY   STATUS    RESTARTS   AGE
+> pod/spark-cluster-master-0   1/1     Running   0          4m
+> pod/spark-cluster-worker-0   1/1     Running   0          4m
+> pod/spark-cluster-worker-1   1/1     Running   0          48s
+> 
+> NAME                               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)           AGE
+> service/spark-cluster-headless     ClusterIP   None             <none>        <none>            4m
+> service/spark-cluster-master-svc   ClusterIP   10.102.130.157   <none>        7077/TCP,80/TCP   4m
+> 
+> NAME                                    READY   AGE
+> statefulset.apps/spark-cluster-master   1/1     4m
+> statefulset.apps/spark-cluster-worker   2/2     4m
 
 By default, spark will create one master node and two worker nodes.      
 
@@ -52,35 +52,35 @@ kubectl -n spark-cluster logs -f spark-cluster-worker-0
 ```
 
 Usually at this stage master logs will end with:       
-> ...           
-> 24/10/21 07:37:16 INFO Master: I have been elected leader! New state: ALIVE           
-> 24/10/21 07:37:39 INFO Master: Registering worker 10.244.0.3:33145 with 2 cores, 3.0 GiB RAM           
-> 24/10/21 07:37:47 INFO Master: Registering worker 10.244.0.5:41495 with 2 cores, 3.0 GiB RAM           
+> ...
+> 24/10/21 07:37:16 INFO Master: I have been elected leader! New state: ALIVE
+> 24/10/21 07:37:39 INFO Master: Registering worker 10.244.0.3:33145 with 2 cores, 3.0 GiB RAM
+> 24/10/21 07:37:47 INFO Master: Registering worker 10.244.0.5:41495 with 2 cores, 3.0 GiB RAM
 
 We see a log for each worker registered         
 
 Worker logs at this stage will end with:
-> ...           
-> Caused by: io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: spark-cluster-master-svc/10.102.130.157:7077           
-> Caused by: java.net.ConnectException: Connection refused           
-> 	at java.base/sun.nio.ch.Net.pollConnect(Native Method)           
-> 	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)           
-> 	at java.base/sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:946)           
-> 	at io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:337)           
-> 	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:334)           
-> 	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:776)           
-> 	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)           
-> 	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)           
-> 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)           
-> 	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)           
-> 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)           
-> 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)           
-> 	at java.base/java.lang.Thread.run(Thread.java:840)           
-> 24/10/21 07:37:39 INFO Worker: Retrying connection to master (attempt # 2)           
-> 24/10/21 07:37:39 INFO Worker: Connecting to master spark-cluster-master-svc:7077...           
-> 24/10/21 07:37:39 INFO TransportClientFactory: Successfully created connection to spark-cluster-master-svc/10.102.130.157:7077 after 2 ms (0 ms spent in bootstraps)           
-> 24/10/21 07:37:39 INFO Worker: Successfully registered with master spark://spark-cluster-master-0.spark-cluster-headless.spark-cluster.svc.cluster.local:7077           
-> 24/10/21 07:37:39 INFO Worker: WorkerWebUI is available at http://localhost:8080/proxy/worker-20241021073715-10.244.0.3-33145           
+> ...
+> Caused by: io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: spark-cluster-master-svc/10.102.130.157:7077
+> Caused by: java.net.ConnectException: Connection refused
+> 	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+> 	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+> 	at java.base/sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:946)
+> 	at io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:337)
+> 	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:334)
+> 	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:776)
+> 	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+> 	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+> 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+> 	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+> 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+> 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+> 	at java.base/java.lang.Thread.run(Thread.java:840)
+> 24/10/21 07:37:39 INFO Worker: Retrying connection to master (attempt # 2)
+> 24/10/21 07:37:39 INFO Worker: Connecting to master spark-cluster-master-svc:7077...
+> 24/10/21 07:37:39 INFO TransportClientFactory: Successfully created connection to spark-cluster-master-svc/10.102.130.157:7077 after 2 ms (0 ms spent in bootstraps)
+> 24/10/21 07:37:39 INFO Worker: Successfully registered with master spark://spark-cluster-master-0.spark-cluster-headless.spark-cluster.svc.cluster.local:7077
+> 24/10/21 07:37:39 INFO Worker: WorkerWebUI is available at http://localhost:8080/proxy/worker-20241021073715-10.244.0.3-33145
 
 As we can see, the worker tried to connect with master but failed, then at 07:37:39 it retry again and succeed, this is because worker usually is ready before both master and spark-cluster-master-svc service.       
 
@@ -142,57 +142,57 @@ Similiar to spark and minio we will start by [installing helm chart](https://git
 
 A successfull deployment should look like this:
 
-> NAME                                 READY   STATUS    RESTARTS   AGE           
-> pod/continuous-image-puller-crsrz    1/1     Running   0          2m19s           
-> pod/hub-7d457d76b9-lvdnj             1/1     Running   0          2m19s           
-> pod/proxy-6d5df59564-jsdvs           1/1     Running   0          2m19s           
-> pod/user-scheduler-f4f4f6f8b-7t2fh   1/1     Running   0          2m19s           
-> pod/user-scheduler-f4f4f6f8b-zbz8g   1/1     Running   0          2m19s           
->            
-> NAME                   TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE           
-> service/hub            ClusterIP      10.104.223.239   <none>        8081/TCP       2m20s           
-> service/proxy-api      ClusterIP      10.102.186.223   <none>        8001/TCP       2m20s           
-> service/proxy-public   LoadBalancer   10.105.168.15    <pending>     80:30280/TCP   2m20s           
->            
-> NAME                                     DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE           
-> daemonset.apps/continuous-image-puller   1         1         1       1            1           <none>          2m20s           
->            
-> NAME                             READY   UP-TO-DATE   AVAILABLE   AGE           
-> deployment.apps/hub              1/1     1            1           2m20s           
-> deployment.apps/proxy            1/1     1            1           2m20s           
-> deployment.apps/user-scheduler   2/2     2            2           2m20s           
->            
-> NAME                                       DESIRED   CURRENT   READY   AGE           
-> replicaset.apps/hub-7d457d76b9             1         1         1       2m19s           
-> replicaset.apps/proxy-6d5df59564           1         1         1       2m19s           
-> replicaset.apps/user-scheduler-f4f4f6f8b   2         2         2       2m19s           
->            
-> NAME                                READY   AGE           
-> statefulset.apps/user-placeholder   0/0     2m19s           
+> NAME                                 READY   STATUS    RESTARTS   AGE
+> pod/continuous-image-puller-crsrz    1/1     Running   0          2m19s
+> pod/hub-7d457d76b9-lvdnj             1/1     Running   0          2m19s
+> pod/proxy-6d5df59564-jsdvs           1/1     Running   0          2m19s
+> pod/user-scheduler-f4f4f6f8b-7t2fh   1/1     Running   0          2m19s
+> pod/user-scheduler-f4f4f6f8b-zbz8g   1/1     Running   0          2m19s
+> 
+> NAME                   TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+> service/hub            ClusterIP      10.104.223.239   <none>        8081/TCP       2m20s
+> service/proxy-api      ClusterIP      10.102.186.223   <none>        8001/TCP       2m20s
+> service/proxy-public   LoadBalancer   10.105.168.15    <pending>     80:30280/TCP   2m20s
+> 
+> NAME                                     DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+> daemonset.apps/continuous-image-puller   1         1         1       1            1           <none>          2m20s
+> 
+> NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
+> deployment.apps/hub              1/1     1            1           2m20s
+> deployment.apps/proxy            1/1     1            1           2m20s
+> deployment.apps/user-scheduler   2/2     2            2           2m20s
+> 
+> NAME                                       DESIRED   CURRENT   READY   AGE
+> replicaset.apps/hub-7d457d76b9             1         1         1       2m19s
+> replicaset.apps/proxy-6d5df59564           1         1         1       2m19s
+> replicaset.apps/user-scheduler-f4f4f6f8b   2         2         2       2m19s
+> 
+> NAME                                READY   AGE
+> statefulset.apps/user-placeholder   0/0     2m19s
 
 A non-successfull deployment probably will fail at this pod
-> NAME                                 READY   STATUS           RESTARTS   AGE           
-> pod/continuous-image-puller-n57rd    1/1     ErrImagePull     0          5m55s           
-> ...           
+> NAME                                 READY   STATUS           RESTARTS   AGE
+> pod/continuous-image-puller-n57rd    1/1     ErrImagePull     0          5m55s
+> ...
 
 This means that Docker was unable to find our custom-made container image from step "Kernel contents" to debug you can try the command:
 ```
 kubectl -n jupyterhub describe pod/continuous-image-puller-n57rd
 ```
 And on the last section you'll see the problem
-> ...           
-> Events:           
->   Type     Reason     Age                From               Message           
->   ----     ------     ----               ----               -------           
->   Normal   Scheduled  46s                default-scheduler  Successfully assigned jupyterhub/continuous-image-puller-n57rd to minikube           
->   Normal   Pulled     45s                kubelet            Container image "quay.io/jupyterhub/k8s-network-tools:3.3.8" already present on machine           
->   Normal   Created    45s                kubelet            Created container image-pull-metadata-block           
->   Normal   Started    45s                kubelet            Started container image-pull-metadata-block           
->   Normal   BackOff    13s (x2 over 42s)  kubelet            Back-off pulling image "localhost:5000/mit-jupy-pyspark:1.0.0"           
->   Warning  Failed     13s (x2 over 42s)  kubelet            Error: ImagePullBackOff           
->   Normal   Pulling    1s (x3 over 44s)   kubelet            Pulling image "localhost:5000/mit-jupy-pyspark:1.0.0"           
->   Warning  Failed     1s (x3 over 44s)   kubelet            Failed to pull image "localhost:5000/mit-jupy-pyspark:1.0.0": Error response from daemon: manifest for localhost:5000/mit-jupy-pyspark:1.0.0 not found: manifest unknown: manifest unknown           
->   Warning  Failed     1s (x3 over 44s)   kubelet            Error: ErrImagePull           
+> ...
+> Events:
+>   Type     Reason     Age                From               Message
+>   ----     ------     ----               ----               -------
+>   Normal   Scheduled  46s                default-scheduler  Successfully assigned jupyterhub/continuous-image-puller-n57rd to minikube
+>   Normal   Pulled     45s                kubelet            Container image "quay.io/jupyterhub/k8s-network-tools:3.3.8" already present on machine
+>   Normal   Created    45s                kubelet            Created container image-pull-metadata-block
+>   Normal   Started    45s                kubelet            Started container image-pull-metadata-block
+>   Normal   BackOff    13s (x2 over 42s)  kubelet            Back-off pulling image "localhost:5000/mit-jupy-pyspark:1.0.0"
+>   Warning  Failed     13s (x2 over 42s)  kubelet            Error: ImagePullBackOff
+>   Normal   Pulling    1s (x3 over 44s)   kubelet            Pulling image "localhost:5000/mit-jupy-pyspark:1.0.0"
+>   Warning  Failed     1s (x3 over 44s)   kubelet            Failed to pull image "localhost:5000/mit-jupy-pyspark:1.0.0": Error response from daemon: manifest for localhost:5000/mit-jupy-pyspark:1.0.0 not found: manifest unknown: manifest unknown
+>   Warning  Failed     1s (x3 over 44s)   kubelet            Error: ErrImagePull
 
 Once you managed to have jupyterhub running with our custom kernel, we can [access jupyter web interface](https://github.com/mitsiu-carreno/k8s-spark-lab/tree/main/jupyterhub#accessing-web-console)
 
@@ -200,13 +200,13 @@ Heading to localhost:9080 we will be prompted with jupyter authentication, in th
 ![jupyter-auth](assets/3-jupyter-auth.png)
 
 Once we sign in, a new pod will be created with the name jupyter-<user> 
-> NAME                                 READY   STATUS    RESTARTS   AGE           
-> pod/continuous-image-puller-n57rd    1/1     Running   0          15m           
-> pod/hub-6cc5b4dcfb-kkgsx             1/1     Running   0          15m           
-> pod/jupyter-mit                      1/1     Running   0          14s           
-> pod/proxy-fc5667f5f-7kmms            1/1     Running   0          15m           
-> pod/user-scheduler-f4f4f6f8b-7t2fh   1/1     Running   0          55m           
-> pod/user-scheduler-f4f4f6f8b-zbz8g   1/1     Running   0          55m            
+> NAME                                 READY   STATUS    RESTARTS   AGE
+> pod/continuous-image-puller-n57rd    1/1     Running   0          15m
+> pod/hub-6cc5b4dcfb-kkgsx             1/1     Running   0          15m
+> pod/jupyter-mit                      1/1     Running   0          14s
+> pod/proxy-fc5667f5f-7kmms            1/1     Running   0          15m
+> pod/user-scheduler-f4f4f6f8b-7t2fh   1/1     Running   0          55m
+> pod/user-scheduler-f4f4f6f8b-zbz8g   1/1     Running   0          55m 
 
 And on our browser we will see our custom kernel
 ![jupyter-kernel](assets/3-jupyter-kernel.png)
