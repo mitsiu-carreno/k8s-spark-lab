@@ -3,3 +3,12 @@ podman build -t cluster-apache-spark:3.5.3 .
 podman-compose up
 
 podman exec -it spark-master ./bin/spark-submit --master spark://spark-master:7077 --conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 --conf spark.hadoop.fs.s3a.access.key=accesskey --conf spark.hadoop.fs.s3a.secret.key=secretkey --conf spark.hadoop.fs.s3a.path.style.access=true --packages org.apache.hadoop:hadoop-aws:3.3.4 /opt/spark-apps/test.py
+
+
+# Development
+Formatting
+black file.py 
+
+Lintting
+flake8 file.py
+pylint file.py
