@@ -21,7 +21,7 @@ import time
 
 spark = SparkSession.builder.appName("log_extract").getOrCreate()
 
-df_raw = spark.read.text("s3a://logs/input/*")
+df_raw = spark.read.text("s3a://logs/input/**")
 
 # df_raw.show()
 
