@@ -1,3 +1,4 @@
+from datetime import datetime
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     col,
@@ -9,7 +10,8 @@ from pyspark.sql.functions import (
 
 spark = SparkSession.builder.appName("log_transform").getOrCreate()
 # Cauton dont read /known/** because domain column is lost
-df_known = spark.read.parquet("s3a://logs/output/known/")
+#df_known = spark.read.parquet("s3a://logs/output/known/")
+df_known = spark.read.parquet("s3a://logs/output/test/")
 
 #df_known.show(truncate=False)
 #print(f"{df_known.count()}, {len(df_known.columns)}")
@@ -44,6 +46,14 @@ ngram = NGram(n=3, inputCol="path_characters", outputCol="path_ngrams")
 df_ngrams = ngram.transform(df_exploded)
 
 df_ngrams.select("clean_path", "path_ngrams").show(truncate=False)
+
+from pyspark.ml.feature import HashingTF
+
+hashingTF = HashingTF(inputCol="path_ngrams", outputCol="hash_ngrams", numFeatures=1000)
+
+df_ngrams = hashingTF.transform(df_ngrams)
+
+df_ngrams.show(truncate=False)
 
 from pyspark.sql.functions import levenshtein, col
 
@@ -87,8 +97,9 @@ vector_assembler = VectorAssembler(
     inputCols=[
         #"levenshtein_distance", 
         "fabstime", 
-        "day_of_week", "req_method_onehot", 
-        #"path_ngrams"
+        "day_of_week", 
+        "req_method_onehot", 
+        "hash_ngrams"
     ],
     outputCol="features"
 )
@@ -109,6 +120,15 @@ train_data, test_data = df_final.randomSplit([0.8, 0.2], seed=123)
 
 # Train the model
 lr_model = lr.fit(train_data)
+
+lr_model.save("s3a://logs/models/" + datetime.now().strftime("%y-%m-%d-%H:%M") +"/domain_classifier")
+
+"""
+from pyspark.ml.classification import LogisticRegressionModel
+
+# Load the saved model
+loaded_lr_model = LogisticRegressionModel.load("s3a://logs/models/domain_classifier")
+"""
 
 # Make predictions on the test set
 predictions = lr_model.transform(test_data)
