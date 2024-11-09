@@ -60,3 +60,17 @@ df_exploded = df_exploded.withColumn("query_key", split(col("query_param"), "=")
 df.filter((df["domain"] != "canvas.ieec.mx") & (df["query_param"].isNotNull())).groupBy("domain").count().show(truncate=False)
 ```
 
+
+
+Bastion experiment
+Remote
+sudo ufw allow 9001/tcp
+sudo ufw reload
+or
+sudo iptables -A INPUT -p tcp --dport 9001 -j ACCEPT
+
+Local
+ssh -fN -R <remote_port>:localhost:<local_port> user@bastion
+
+Remote
+ssh -J user@bastion -p <remote_port> user@localhost
