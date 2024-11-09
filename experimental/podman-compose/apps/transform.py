@@ -1,4 +1,5 @@
 from datetime import datetime
+from pyspark.ml.feature import NGram
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     col,
@@ -18,10 +19,21 @@ df_known = spark.read.parquet("s3a://logs/output/test/")
 
 
 df_exploded = df_known.withColumn("day_of_week", dayofweek(col("fdate_time")))
-# explode_outer doesn't discard empty arrays
-df_exploded = df_exploded.withColumn("query_param", explode_outer(col("clean_query_list")))
+# ADD MONTH
+# ADD YEAR
 
-df_exploded = df_exploded.withColumn("query_key", split(col("query_param"), "=").getItem(0)).withColumn("query_value", split(col("query_param"), "=").getItem(1))
+df_exploded = df_exploded.withColumn("path_characters", split(col("clean_path"), ""))
+
+ngram = NGram(n=3, inputCol="path_characters", outputCol="path_ngrams")
+df_ngrams = ngram.transform(df_exploded)
+
+df_ngrams = df_ngrams.withColumn("url_features", 
+    concat(
+        col("path_ngrams"), 
+        transform(col("clean_query_list"), lambda x: split(x, "=")[0]))
+)
+
+df_ngrams.select("clean_path", "path_ngrams", "clean_query_list", "url_features").show(truncate=False)
 
 
 print(f"{df_exploded.count()}, {len(df_exploded.columns)}")
@@ -30,18 +42,13 @@ print(f"{df_exploded.count()}, {len(df_exploded.columns)}")
 df_exploded.show(truncate=False)
 df_exploded.printSchema()
 
-from pyspark.ml.feature import NGram
 
-df_exploded = df_exploded.withColumn("path_characters", split(col("clean_path"), ""))
 
-ngram = NGram(n=3, inputCol="path_characters", outputCol="path_ngrams")
-df_ngrams = ngram.transform(df_exploded)
 
-df_ngrams.select("clean_path", "path_ngrams").show(truncate=False)
 
 from pyspark.ml.feature import HashingTF
 
-hashingTF = HashingTF(inputCol="path_ngrams", outputCol="hash_ngrams", numFeatures=1000)
+hashingTF = HashingTF(inputCol="url_features", outputCol="hash_url_features", numFeatures=1000)
 
 df_ngrams = hashingTF.transform(df_ngrams)
 
@@ -91,7 +98,7 @@ vector_assembler = VectorAssembler(
         "fabstime", 
         "day_of_week", 
         "req_method_onehot", 
-        "hash_ngrams"
+        "hash_url_features"
     ],
     outputCol="features"
 )
