@@ -14,17 +14,71 @@ from pyspark.sql.functions import (
 
 spark = SparkSession.builder.appName("log_transform").getOrCreate()
 # Cauton dont read /known/** because domain column is lost
-#df_known = spark.read.parquet("s3a://logs/output/known/")
-df_known = spark.read.parquet("s3a://logs/output/test/")
+df_known = spark.read.parquet("s3a://logs/output/known/")
+#df_known = spark.read.parquet("s3a://logs/output/test/")
 
 
 df_exploded = df_known.withColumn("day_of_week", dayofweek(col("fdate_time")))
 # ADD MONTH
 # ADD YEAR
 
+
+###Playground
+"""
+from pyspark.sql.functions import explode, col, length, countDistinct, min, max, avg
+
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+from pyspark.sql.types import ArrayType, StringType
+
+df_exploded = df_exploded.withColumn("path_words", split(col("clean_path"), "/"))
+
+
+
+# Count unique words
+df_exploded = df_exploded.withColumn("word", explode(col("path_words")))
+unique_words_count = df_exploded.select("word").distinct().count()
+print(f"Unique words count: {unique_words_count}")
+
+# 2. Get min, max, and average characters per word
+df_with_word_length = df_exploded.withColumn("word_length", length(col("word")))
+
+# Min, Max, and Average word lengths
+min_length = df_with_word_length.select(min("word_length")).collect()[0][0]
+max_length = df_with_word_length.select(max("word_length")).collect()[0][0]
+avg_length = df_with_word_length.select(avg("word_length")).collect()[0][0]
+
+print(f"Minimum word length: {min_length}")
+print(f"Maximum word length: {max_length}")
+print(f"Average word length: {avg_length}")
+
+# Calculating the standard deviation of word lengths
+stddev_length = df_with_word_length.agg(F.stddev("word_length")).collect()[0][0]
+print(f"Standard Deviation of word length: {stddev_length}")
+
+# Calculating the length of each array (number of words)
+df_with_array_length = df_exploded.withColumn("array_length", F.size("path_words"))
+
+# Calculating min, max, and average length of the arrays
+min_array_length = df_with_array_length.agg(F.min("array_length")).collect()[0][0]
+max_array_length = df_with_array_length.agg(F.max("array_length")).collect()[0][0]
+avg_array_length = df_with_array_length.agg(F.avg("array_length")).collect()[0][0]
+
+# Calculating standard deviation of array lengths
+stddev_array_length = df_with_array_length.agg(F.stddev("array_length")).collect()[0][0]
+
+print(f"Min array length: {min_array_length}")
+print(f"Max array length: {max_array_length}")
+print(f"Average array length: {avg_array_length}")
+print(f"Standard Deviation of array length: {stddev_array_length}")
+
+spark.stop()
+###End-playground
+"""
+
 df_exploded = df_exploded.withColumn("path_characters", split(col("clean_path"), ""))
 
-ngram = NGram(n=3, inputCol="path_characters", outputCol="path_ngrams")
+ngram = NGram(n=9, inputCol="path_characters", outputCol="path_ngrams")
 df_ngrams = ngram.transform(df_exploded)
 
 df_ngrams = df_ngrams.withColumn("url_features", 
@@ -33,7 +87,7 @@ df_ngrams = df_ngrams.withColumn("url_features",
         transform(col("clean_query_list"), lambda x: split(x, "=")[0]))
 )
 
-df_ngrams.select("clean_path", "path_ngrams", "clean_query_list", "url_features").show(truncate=False)
+#df_ngrams.select("clean_path", "path_ngrams", "clean_query_list", "url_features").show(truncate=False)
 
 
 print(f"{df_exploded.count()}, {len(df_exploded.columns)}")
@@ -43,17 +97,18 @@ df_exploded.show(truncate=False)
 df_exploded.printSchema()
 
 
-
-
+#df_exploded.groupBy("domain").count().orderBy(col("count").desc()).show(100)
 
 from pyspark.ml.feature import HashingTF
 
-hashingTF = HashingTF(inputCol="url_features", outputCol="hash_url_features", numFeatures=1000)
+hashingTF = HashingTF(inputCol="url_features", outputCol="hash_url_features", numFeatures=16384)
 
 df_ngrams = hashingTF.transform(df_ngrams)
 
-df_ngrams.show(truncate=False)
+#df_ngrams.select("clean_path", "path_ngrams", "clean_query_list", "url_features", "hash_url_features").show(truncate=False)
 
+
+"""
 from pyspark.sql.functions import levenshtein, col
 
 df_self_joined = df_exploded.alias("df1").join(
@@ -68,7 +123,7 @@ df_with_levenshtein = df_self_joined.withColumn(
 )
 
 df_with_levenshtein.select("df1.clean_path", "df2.clean_path", "levenshtein_distance").show(truncate=False)
-
+"""
 
 from pyspark.ml.feature import StringIndexer, OneHotEncoder
 
@@ -98,6 +153,7 @@ vector_assembler = VectorAssembler(
         "fabstime", 
         "day_of_week", 
         "req_method_onehot", 
+        "body_bytes_sent",
         "hash_url_features"
     ],
     outputCol="features"
@@ -106,7 +162,7 @@ vector_assembler = VectorAssembler(
 df_encoded.printSchema()
 
 df_final = vector_assembler.transform(df_encoded)
-df_final.select("clean_path", "features", "domain_onehot").show(truncate=False)
+#df_final.select("clean_path", "features", "domain_onehot").show(truncate=False)
 
 
 from pyspark.ml.classification import LogisticRegression

@@ -60,6 +60,7 @@ df_exploded = df_exploded.withColumn("query_key", split(col("query_param"), "=")
 df.filter((df["domain"] != "canvas.ieec.mx") & (df["query_param"].isNotNull())).groupBy("domain").count().show(truncate=False)
 ```
 
+kitten themes -> CLRS or default
 
 
 Bastion experiment
@@ -74,3 +75,10 @@ ssh -fN -R <remote_port>:localhost:<local_port> user@bastion
 
 Remote
 ssh -J user@bastion -p <remote_port> user@localhost
+
+-----
+Remote
+ssh -R PORT_X:localhost:PORT_Y user@public-server
+
+Local
+ssh -L LOCAL_PORT:localhost:PORT_X user@public-server
