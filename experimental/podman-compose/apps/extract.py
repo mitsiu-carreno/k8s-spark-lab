@@ -1,4 +1,5 @@
 from pyspark.sql import SparkSession
+from pyspark.ml.feature import NGram
 from pyspark.sql.functions import (
     regexp_extract,
     col,
@@ -13,6 +14,13 @@ from pyspark.sql.functions import (
     concat_ws,
     dayofweek,
     size,
+    explode_outer,
+    when,
+    size,
+    dayofweek,
+    split,
+    concat,
+    transform,
 )
 from pyspark.sql.types import IntegerType, StringType, ArrayType, TimestampType
 import urllib.parse
@@ -75,7 +83,7 @@ df_parsed = df_parsed.withColumn(
 
 df_parsed = df_parsed.drop("gzip_ratio")
 
-df_parsed.printSchema()
+#df_parsed.printSchema()
 
 # print(f"{df_parsed.count()}, {len(df_parsed.columns)}")
 
@@ -111,7 +119,9 @@ def get_query_list(uri):
 
 
 def get_domain(referer):
-    return urllib.parse.urlparse(referer).netloc if referer is not None else None
+    netloc = urllib.parse.urlparse(referer).netloc
+    return netloc if netloc not in (None, "", "-") else "Unknown"
+    #return urllib.parse.urlparse(referer).netloc if referer not in (None, "-") else "Unknown"
 
 
 def parse_date(date_str):
@@ -145,10 +155,10 @@ df = df.withColumn(
     "fabstime", (hour(col("fdate_time")) + minute(col("fdate_time")) / 60.0)
 )
 
-df.printSchema()
+#df.printSchema()
 
-row = df.take(1)
-print(row)
+#row = df.take(1)
+#print(row)
 
 
 # Clusterizing
@@ -183,6 +193,65 @@ test_df = test_df.na.drop()
 model = pipeline.fit(test_df)
 """
 
+df = df.withColumn("day_of_week", dayofweek(col("fdate_time")))
+
+df= df.withColumn("path_characters", split(col("clean_path"), ""))
+
+ngram = NGram(n=9, inputCol="path_characters", outputCol="path_ngrams")
+df = ngram.transform(df)
+
+df= df.withColumn("url_features", 
+    concat(
+        col("path_ngrams"), 
+        transform(col("clean_query_list"), lambda x: split(x, "=")[0]))
+)
+
+from pyspark.ml.feature import HashingTF
+
+hashingTF = HashingTF(inputCol="url_features", outputCol="hash_url_features", numFeatures=16384)
+
+df= hashingTF.transform(df)
+
+from pyspark.ml.feature import StringIndexer, OneHotEncoder
+
+indexer_http_method = StringIndexer(inputCol="req_method", outputCol="req_method_index")
+encoder_http_method = OneHotEncoder(inputCol="req_method_index", outputCol="req_method_onehot")
+
+#df.groupBy("domain").count().show(100, truncate=False)
+#df.filter(df["domain"] == "").select("http_referer", "domain").show(truncate=False)
+
+indexer_domain = StringIndexer(inputCol="domain", outputCol="domain_index")
+encoder_domain = OneHotEncoder(inputCol="domain_index", outputCol="domain_onehot")
+
+df = indexer_http_method.fit(df).transform(df)
+df = encoder_http_method.fit(df).transform(df)
+df = indexer_domain.fit(df).transform(df)
+df = encoder_domain.fit(df).transform(df)
+
+#df.select("clean_path", "day_of_week", "req_method_onehot", "domain_onehot").show(truncate=False)
+
+"""
+#Move to transform
+from pyspark.ml.feature import VectorAssembler
+
+# Create the feature vector
+vector_assembler = VectorAssembler(
+    inputCols=[
+        #"levenshtein_distance", 
+        "fabstime", 
+        "day_of_week", 
+        "req_method_onehot", 
+        "body_bytes_sent",
+        "hash_url_features"
+    ],
+    outputCol="features"
+)
+
+#df.printSchema()
+
+df= vector_assembler.transform(df)
+
+"""
 
 registered_domains = [
     "2021.designa.mx",
@@ -243,9 +312,14 @@ registered_domains = [
 ]
 
 print(f"{df.count()}, {len(df.columns)}")
+df.printSchema()
+
+row = df.take(1)
+print("-"*100)
+print(row)
 
 df_known_domains = df.filter(col("domain").isin(*registered_domains))
 df_unknown_domains = df.filter(~col("domain").isin(*registered_domains))
 #df_known_domains = df_known_domains.repartition(50)
-df_known_domains.write.partitionBy("domain").parquet("s3a://logs/output/known/")
-df_unknown_domains.write.parquet("s3a://logs/output/unknown")
+df_known_domains.write.partitionBy("domain").parquet("s3a://logs/output/extract/known/")
+df_unknown_domains.write.parquet("s3a://logs/output/extract/unknown")

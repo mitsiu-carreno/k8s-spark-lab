@@ -1,3 +1,9 @@
+"""
+df_selected_filtered = spark.read.parquet("path_to_parquet_files") \
+    .select("column1", "column2")
+"""
+
+
 from datetime import datetime
 from pyspark.ml.feature import NGram
 from pyspark.sql import SparkSession
@@ -14,13 +20,8 @@ from pyspark.sql.functions import (
 
 spark = SparkSession.builder.appName("log_transform").getOrCreate()
 # Cauton dont read /known/** because domain column is lost
-df_known = spark.read.parquet("s3a://logs/output/known/")
+df_known = spark.read.parquet("s3a://logs/output/extract/known/").select("fabstime", "day_of_week", "req_method_onehot", "body_bytes_sent", "hash_url_features", "domain_index")
 #df_known = spark.read.parquet("s3a://logs/output/test/")
-
-
-df_exploded = df_known.withColumn("day_of_week", dayofweek(col("fdate_time")))
-# ADD MONTH
-# ADD YEAR
 
 
 ###Playground
@@ -76,36 +77,6 @@ spark.stop()
 ###End-playground
 """
 
-df_exploded = df_exploded.withColumn("path_characters", split(col("clean_path"), ""))
-
-ngram = NGram(n=9, inputCol="path_characters", outputCol="path_ngrams")
-df_ngrams = ngram.transform(df_exploded)
-
-df_ngrams = df_ngrams.withColumn("url_features", 
-    concat(
-        col("path_ngrams"), 
-        transform(col("clean_query_list"), lambda x: split(x, "=")[0]))
-)
-
-#df_ngrams.select("clean_path", "path_ngrams", "clean_query_list", "url_features").show(truncate=False)
-
-
-print(f"{df_exploded.count()}, {len(df_exploded.columns)}")
-
-
-df_exploded.show(truncate=False)
-df_exploded.printSchema()
-
-
-#df_exploded.groupBy("domain").count().orderBy(col("count").desc()).show(100)
-
-from pyspark.ml.feature import HashingTF
-
-hashingTF = HashingTF(inputCol="url_features", outputCol="hash_url_features", numFeatures=16384)
-
-df_ngrams = hashingTF.transform(df_ngrams)
-
-#df_ngrams.select("clean_path", "path_ngrams", "clean_query_list", "url_features", "hash_url_features").show(truncate=False)
 
 
 """
@@ -125,24 +96,6 @@ df_with_levenshtein = df_self_joined.withColumn(
 df_with_levenshtein.select("df1.clean_path", "df2.clean_path", "levenshtein_distance").show(truncate=False)
 """
 
-from pyspark.ml.feature import StringIndexer, OneHotEncoder
-
-indexer_http_method = StringIndexer(inputCol="req_method", outputCol="req_method_index")
-encoder_http_method = OneHotEncoder(inputCol="req_method_index", outputCol="req_method_onehot")
-
-# This will change to one domain at a time
-indexer_domain = StringIndexer(inputCol="domain", outputCol="domain_index")
-encoder_domain = OneHotEncoder(inputCol="domain_index", outputCol="domain_onehot")
-
-# Apply the transformations
-#df_encoded = indexer_day_of_week.fit(df_ngrams).transform(df_ngrams)
-#df_encoded = encoder_day_of_week.fit(df_encoded).transform(df_encoded)
-df_encoded = indexer_http_method.fit(df_ngrams).transform(df_ngrams)
-df_encoded = encoder_http_method.fit(df_encoded).transform(df_encoded)
-df_encoded = indexer_domain.fit(df_encoded).transform(df_encoded)
-df_encoded = encoder_domain.fit(df_encoded).transform(df_encoded)
-
-df_encoded.select("clean_path", "day_of_week", "req_method_onehot", "domain_onehot").show(truncate=False)
 
 from pyspark.ml.feature import VectorAssembler
 
@@ -159,16 +112,20 @@ vector_assembler = VectorAssembler(
     outputCol="features"
 )
 
-df_encoded.printSchema()
+df_known.printSchema()
+row = df_known.take(1)
+print("-"*100)
+print(row)
 
-df_final = vector_assembler.transform(df_encoded)
+
+df_final = vector_assembler.transform(df_known)
 #df_final.select("clean_path", "features", "domain_onehot").show(truncate=False)
 
 
 from pyspark.ml.classification import LogisticRegression
 
 # Train a logistic regression model
-lr = LogisticRegression(featuresCol="features", labelCol="domain_index", family="multinomial")
+lr = LogisticRegression(featuresCol="features", labelCol="domain_index", family="multinomial", maxIter=100)
 
 # Split data into training and testing sets
 train_data, test_data = df_final.randomSplit([0.8, 0.2], seed=123)
@@ -231,7 +188,13 @@ f1_score = evaluator_f1.evaluate(predictions)
 print(f"F1 Score: {f1_score}")
 #f1: F1 score, which is the harmonic mean of precision and recall.
 
-
+spark.stop()
+df_known.printSchema()
+print(f"Test Accuracy: {accuracy}")
+print(f"Accuracy: {accuracy}")
+print(f"Weighted Precision: {precision}")
+print(f"Weighted Recall: {recall}")
+print(f"F1 Score: {f1_score}")
 
 
 

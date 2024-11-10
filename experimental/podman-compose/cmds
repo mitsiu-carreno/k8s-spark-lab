@@ -4,6 +4,10 @@ podman-compose up
 
 podman exec -it spark-master ./bin/spark-submit --master spark://spark-master:7077 --conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 --conf spark.hadoop.fs.s3a.access.key=accesskey --conf spark.hadoop.fs.s3a.secret.key=secretkey --conf spark.hadoop.fs.s3a.path.style.access=true --packages org.apache.hadoop:hadoop-aws:3.3.4 /opt/spark-apps/test.py
 
+## Server
+docker exec -it spark-master ./bin/spark-submit --master spark://spark-master:7077 --conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 --conf spark.hadoop.fs.s3a.access.key=accesskey --conf spark.hadoop.fs.s3a.secret.key=secretkey --conf spark.hadoop.fs.s3a.path.style.access=true --packages org.apache.hadoop:hadoop-aws:3.3.4 --conf spark.executor.memory=50g --conf spark.executor.memoryOverhead=1000m --executor-memory 50g --driver-memory 50g /opt/spark-apps/transform.py 2>&1 | tee spark_output.log
+
+72GB used
 
 scp apps/*  designar4@192.168.100.20:/home/designar4/spark-cluster/compose/apps/
 
@@ -11,15 +15,18 @@ ssh -L :12345:localhost:4040 designar4@192.168.100.20
 
 
 # Start new named screen session
-screen -S s3-cp
+screen -S spark
 
 # Detach from named session
 Ctrl + A, then D
 
 # Can even break the ssh connection
 
+# List sessions
+screen -ls
+
 # Reattach to session
-screen -r s3-cp
+screen -r spark
 
 # Development
 Formatting
@@ -78,7 +85,7 @@ ssh -J user@bastion -p <remote_port> user@localhost
 
 -----
 Remote
-ssh -R PORT_X:localhost:PORT_Y user@public-server
+ssh -R 12345:localhost:PORT_Y user@public-server
 
 Local
-ssh -L LOCAL_PORT:localhost:PORT_X user@public-server
+ssh -L LOCAL_PORT:localhost:12345 user@public-server
