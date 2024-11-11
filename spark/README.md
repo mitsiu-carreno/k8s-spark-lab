@@ -99,3 +99,15 @@ Your best friend is the official documentation, but also you might find helpful:
 - https://spark.apache.org/docs/latest/running-on-kubernetes.html
 - https://github.com/bitnami/charts/tree/main/bitnami/spark
 
+https://github.com/bitnami/charts/issues/6661
+https://github.com/emrekutlug/getting-started-with-pyspark/blob/master/getting_started_with_pyspark.ipynb
+https://github.com/Rishabh-Gup12/Pyspark
+https://github.com/Ishikawa7/PySpark-Basics
+https://github.com/roshankoirala/pySpark_tutorial/blob/master/Data_visualization_in_pySpark%20.ipynb
+
+https://github.com/YouniqDexterous/Intrusion-Detection-System-Using-Pyspark/tree/master/IDS
+
+
+
+https://github.com/bitnami/charts/issues/13341#issuecomment-1323930062
+https://github.com/bitnami/containers/issues/67124#issuecomment-2275203587
