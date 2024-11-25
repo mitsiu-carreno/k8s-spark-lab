@@ -1,9 +1,3 @@
-"""
-df_selected_filtered = spark.read.parquet("path_to_parquet_files") \
-    .select("column1", "column2")
-"""
-
-
 from datetime import datetime
 from pyspark.ml.feature import NGram
 from pyspark.sql import SparkSession
@@ -133,7 +127,7 @@ train_data, test_data = df_final.randomSplit([0.8, 0.2], seed=123)
 # Train the model
 lr_model = lr.fit(train_data)
 
-lr_model.save("s3a://logs/models/" + datetime.now().strftime("%y-%m-%d-%H:%M") +"/domain_classifier")
+lr_model.save("s3a://logs/models/" + datetime.now().strftime("%y-%m-%d-%H_%M") +"/domain_classifier")
 
 """
 from pyspark.ml.classification import LogisticRegressionModel
